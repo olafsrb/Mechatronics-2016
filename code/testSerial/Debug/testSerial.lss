@@ -1,0 +1,183 @@
+
+testSerial.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000126  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         000004f8  00000000  00000000  0000017c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      000006d9  00000000  00000000  00000674  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 70 00 	jmp	0xe0	; 0xe0 <__vector_18>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
+  78:	0c 94 91 00 	jmp	0x122	; 0x122 <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <main>:
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include "serial.h"
+//_________________________________________________//
+int main()
+{
+  80:	df 93       	push	r29
+  82:	cf 93       	push	r28
+  84:	cd b7       	in	r28, 0x3d	; 61
+  86:	de b7       	in	r29, 0x3e	; 62
+	 Init_Uart () ;
+  88:	0e 94 5a 00 	call	0xb4	; 0xb4 <Init_Uart>
+	 asm("sei");
+  8c:	78 94       	sei
+	 LEDDDR = 0x01;
+  8e:	e4 e2       	ldi	r30, 0x24	; 36
+  90:	f0 e0       	ldi	r31, 0x00	; 0
+  92:	81 e0       	ldi	r24, 0x01	; 1
+  94:	80 83       	st	Z, r24
+	 LEDPORT = 0;
+  96:	e5 e2       	ldi	r30, 0x25	; 37
+  98:	f0 e0       	ldi	r31, 0x00	; 0
+  9a:	10 82       	st	Z, r1
+	 while (1)
+	 {
+		 LEDPORT ^= (1 << 0);
+  9c:	a5 e2       	ldi	r26, 0x25	; 37
+  9e:	b0 e0       	ldi	r27, 0x00	; 0
+  a0:	e5 e2       	ldi	r30, 0x25	; 37
+  a2:	f0 e0       	ldi	r31, 0x00	; 0
+  a4:	90 81       	ld	r25, Z
+  a6:	81 e0       	ldi	r24, 0x01	; 1
+  a8:	89 27       	eor	r24, r25
+  aa:	8c 93       	st	X, r24
+		 LEDPORT = 0;
+  ac:	e5 e2       	ldi	r30, 0x25	; 37
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	10 82       	st	Z, r1
+  b2:	f4 cf       	rjmp	.-24     	; 0x9c <main+0x1c>
+
+000000b4 <Init_Uart>:
+#include "serial.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+void Init_Uart ()
+{
+  b4:	df 93       	push	r29
+  b6:	cf 93       	push	r28
+  b8:	cd b7       	in	r28, 0x3d	; 61
+  ba:	de b7       	in	r29, 0x3e	; 62
+	UBRR0H= (BRCALC >> 8); // setur Baud register high BRCALC i bita 8
+  bc:	e5 ec       	ldi	r30, 0xC5	; 197
+  be:	f0 e0       	ldi	r31, 0x00	; 0
+  c0:	10 82       	st	Z, r1
+	UBRR0L= BRCALC; // setur baud register low BRCALC
+  c2:	e4 ec       	ldi	r30, 0xC4	; 196
+  c4:	f0 e0       	ldi	r31, 0x00	; 0
+  c6:	80 e1       	ldi	r24, 0x10	; 16
+  c8:	80 83       	st	Z, r24
+
+	 // enable receiver and transmitter , Rx complete interrupt enable
+	UCSR0B = (1<<RXEN0) |(1<<TXEN0) |(1<<RXCIE0);
+  ca:	e1 ec       	ldi	r30, 0xC1	; 193
+  cc:	f0 e0       	ldi	r31, 0x00	; 0
+  ce:	88 e9       	ldi	r24, 0x98	; 152
+  d0:	80 83       	st	Z, r24
+	 // set frame format
+	UCSR0C=(1<<USBS0) |(3<<UCSZ00); // held ad thetta enable baadi
+  d2:	e2 ec       	ldi	r30, 0xC2	; 194
+  d4:	f0 e0       	ldi	r31, 0x00	; 0
+  d6:	8e e0       	ldi	r24, 0x0E	; 14
+  d8:	80 83       	st	Z, r24
+	//UCSZ01 og natt UCSZ00 = 8 bita format asamt stopp bita = 2 bit
+}
+  da:	cf 91       	pop	r28
+  dc:	df 91       	pop	r29
+  de:	08 95       	ret
+
+000000e0 <__vector_18>:
+
+// ineterrupt vektor fyrir USART
+ISR (USART_RX_vect)
+{
+  e0:	1f 92       	push	r1
+  e2:	0f 92       	push	r0
+  e4:	0f b6       	in	r0, 0x3f	; 63
+  e6:	0f 92       	push	r0
+  e8:	11 24       	eor	r1, r1
+  ea:	8f 93       	push	r24
+  ec:	ef 93       	push	r30
+  ee:	ff 93       	push	r31
+  f0:	df 93       	push	r29
+  f2:	cf 93       	push	r28
+  f4:	0f 92       	push	r0
+  f6:	cd b7       	in	r28, 0x3d	; 61
+  f8:	de b7       	in	r29, 0x3e	; 62
+	char cRx ;
+	cRx = UDR0;
+  fa:	e6 ec       	ldi	r30, 0xC6	; 198
+  fc:	f0 e0       	ldi	r31, 0x00	; 0
+  fe:	80 81       	ld	r24, Z
+ 100:	89 83       	std	Y+1, r24	; 0x01
+	UDR0 = cRx + 1;
+ 102:	e6 ec       	ldi	r30, 0xC6	; 198
+ 104:	f0 e0       	ldi	r31, 0x00	; 0
+ 106:	89 81       	ldd	r24, Y+1	; 0x01
+ 108:	8f 5f       	subi	r24, 0xFF	; 255
+ 10a:	80 83       	st	Z, r24
+}
+ 10c:	0f 90       	pop	r0
+ 10e:	cf 91       	pop	r28
+ 110:	df 91       	pop	r29
+ 112:	ff 91       	pop	r31
+ 114:	ef 91       	pop	r30
+ 116:	8f 91       	pop	r24
+ 118:	0f 90       	pop	r0
+ 11a:	0f be       	out	0x3f, r0	; 63
+ 11c:	0f 90       	pop	r0
+ 11e:	1f 90       	pop	r1
+ 120:	18 95       	reti
+
+00000122 <_exit>:
+ 122:	f8 94       	cli
+
+00000124 <__stop_program>:
+ 124:	ff cf       	rjmp	.-2      	; 0x124 <__stop_program>

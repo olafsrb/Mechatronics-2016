@@ -1,0 +1,181 @@
+
+Mech2_delay.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000138  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          00000002  00800100  00800100  000001ac  2**0
+                  ALLOC
+  2 .stab         00000390  00000000  00000000  000001ac  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      000006b5  00000000  00000000  0000053c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 62 00 	jmp	0xc4	; 0xc4 <__vector_14>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	11 e0       	ldi	r17, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	a2 30       	cpi	r26, 0x02	; 2
+  80:	b1 07       	cpc	r27, r17
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 48 00 	call	0x90	; 0x90 <main>
+  88:	0c 94 9a 00 	jmp	0x134	; 0x134 <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <main>:
+#include <avr/interrupt.h>
+
+int xtraTime = 0;
+
+int main()
+{
+  90:	df 93       	push	r29
+  92:	cf 93       	push	r28
+  94:	cd b7       	in	r28, 0x3d	; 61
+  96:	de b7       	in	r29, 0x3e	; 62
+	DDRB = 0x01;
+  98:	e4 e2       	ldi	r30, 0x24	; 36
+  9a:	f0 e0       	ldi	r31, 0x00	; 0
+  9c:	81 e0       	ldi	r24, 0x01	; 1
+  9e:	80 83       	st	Z, r24
+
+	TCCR0A = (1 << WGM01);
+  a0:	e4 e4       	ldi	r30, 0x44	; 68
+  a2:	f0 e0       	ldi	r31, 0x00	; 0
+  a4:	82 e0       	ldi	r24, 0x02	; 2
+  a6:	80 83       	st	Z, r24
+	OCR0A = 156;
+  a8:	e7 e4       	ldi	r30, 0x47	; 71
+  aa:	f0 e0       	ldi	r31, 0x00	; 0
+  ac:	8c e9       	ldi	r24, 0x9C	; 156
+  ae:	80 83       	st	Z, r24
+	TIMSK0 = (1 << OCIE0A);
+  b0:	ee e6       	ldi	r30, 0x6E	; 110
+  b2:	f0 e0       	ldi	r31, 0x00	; 0
+  b4:	82 e0       	ldi	r24, 0x02	; 2
+  b6:	80 83       	st	Z, r24
+	sei();
+  b8:	78 94       	sei
+	TCCR0B = (1 << CS02) | (1 << CS00);
+  ba:	e5 e4       	ldi	r30, 0x45	; 69
+  bc:	f0 e0       	ldi	r31, 0x00	; 0
+  be:	85 e0       	ldi	r24, 0x05	; 5
+  c0:	80 83       	st	Z, r24
+  c2:	ff cf       	rjmp	.-2      	; 0xc2 <main+0x32>
+
+000000c4 <__vector_14>:
+
+
+	}
+}
+ISR(TIMER0_COMPA_vect)
+{
+  c4:	1f 92       	push	r1
+  c6:	0f 92       	push	r0
+  c8:	0f b6       	in	r0, 0x3f	; 63
+  ca:	0f 92       	push	r0
+  cc:	11 24       	eor	r1, r1
+  ce:	8f 93       	push	r24
+  d0:	9f 93       	push	r25
+  d2:	af 93       	push	r26
+  d4:	bf 93       	push	r27
+  d6:	ef 93       	push	r30
+  d8:	ff 93       	push	r31
+  da:	df 93       	push	r29
+  dc:	cf 93       	push	r28
+  de:	cd b7       	in	r28, 0x3d	; 61
+  e0:	de b7       	in	r29, 0x3e	; 62
+	xtraTime++;
+  e2:	80 91 00 01 	lds	r24, 0x0100
+  e6:	90 91 01 01 	lds	r25, 0x0101
+  ea:	01 96       	adiw	r24, 0x01	; 1
+  ec:	90 93 01 01 	sts	0x0101, r25
+  f0:	80 93 00 01 	sts	0x0100, r24
+
+	if(xtraTime > 100)
+  f4:	80 91 00 01 	lds	r24, 0x0100
+  f8:	90 91 01 01 	lds	r25, 0x0101
+  fc:	85 36       	cpi	r24, 0x65	; 101
+  fe:	91 05       	cpc	r25, r1
+ 100:	64 f0       	brlt	.+24     	; 0x11a <__vector_14+0x56>
+	{
+		PORTB ^=(1 << PORTB0);
+ 102:	a5 e2       	ldi	r26, 0x25	; 37
+ 104:	b0 e0       	ldi	r27, 0x00	; 0
+ 106:	e5 e2       	ldi	r30, 0x25	; 37
+ 108:	f0 e0       	ldi	r31, 0x00	; 0
+ 10a:	90 81       	ld	r25, Z
+ 10c:	81 e0       	ldi	r24, 0x01	; 1
+ 10e:	89 27       	eor	r24, r25
+ 110:	8c 93       	st	X, r24
+		xtraTime = 0;
+ 112:	10 92 01 01 	sts	0x0101, r1
+ 116:	10 92 00 01 	sts	0x0100, r1
+	}
+}
+ 11a:	cf 91       	pop	r28
+ 11c:	df 91       	pop	r29
+ 11e:	ff 91       	pop	r31
+ 120:	ef 91       	pop	r30
+ 122:	bf 91       	pop	r27
+ 124:	af 91       	pop	r26
+ 126:	9f 91       	pop	r25
+ 128:	8f 91       	pop	r24
+ 12a:	0f 90       	pop	r0
+ 12c:	0f be       	out	0x3f, r0	; 63
+ 12e:	0f 90       	pop	r0
+ 130:	1f 90       	pop	r1
+ 132:	18 95       	reti
+
+00000134 <_exit>:
+ 134:	f8 94       	cli
+
+00000136 <__stop_program>:
+ 136:	ff cf       	rjmp	.-2      	; 0x136 <__stop_program>
