@@ -1,0 +1,21 @@
+1 #include <avr / i o . h>
+2 #include <avr / i n t e r r u p t . h
+
+void Delay ( har cDelay ) 
+{ cDelayDone =0; OCR0A=cDelay ; //compare value s e t
+ TCNT0=0; // c l e a r the counter
+ TIMSK0=0x02 ; // turn on compare match A
+while ( cDelayDone==0) ; // wait
+ TIMSK0=0; // turn o f f i n t e r r u p t
+ }
+
+ int main ( )
+ {
+ DDRB=0x20 ; // pin5 i s out
+ // s e t up timer 0 to generate i n t e r r u p t on r e g i s t e r A compare
+ OCR0A=0xFF ; //compare value
+ TCCR0A=0x00 ; // output compare pins disconnected
+ TCCR0B = 0x05 ; // f /1024 = 16MHz/1024=15625Hz
+ TIFR0=0x03 ; // c l e a r a l l f l a g s
+ TIMSK0=0; // d i s a b l e a l l counter 0 i n t e r r u p t s
+TIFR0=0x03 ;
